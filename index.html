@@ -83,20 +83,44 @@
   </form>
 
   <script>
-    async function main() {
-      try {
-        await liff.init({ liffId: "2007804177-q1Aen79d" });
-        if (!liff.isLoggedIn()) {
-          liff.login();
-        } else {
-          const profile = await liff.getProfile();
-          document.getElementById('LineUserID').value = profile.userId;
-        }
-      } catch (err) {
-        alert("ไม่สามารถโหลด LIFF ได้: " + err);
+  async function main() {
+    try {
+      await liff.init({ liffId: "2007804177-q1Aen79d" });
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      } else {
+        const profile = await liff.getProfile();
+        document.getElementById('LineUserID').value = profile.userId;
       }
+    } catch (err) {
+      alert("ไม่สามารถโหลด LIFF ได้: " + err);
     }
-    main();
-  </script>
+  }
+  main();
+
+  // ส่งข้อมูลด้วย fetch
+  document.getElementById("registerForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
+
+    try {
+      const res = await fetch("https://houssarb.app.n8n.cloud/form-test/bc98e88e-d76b-4fba-8622-2df59f027641", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        alert("✅ ส่งข้อมูลสำเร็จ");
+        form.reset();
+      } else {
+        alert("❌ ส่งไม่สำเร็จ");
+      }
+    } catch (err) {
+      alert("เกิดข้อผิดพลาด: " + err);
+    }
+  });
+</script>
+
 </body>
 </html>
